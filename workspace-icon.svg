@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- 紫色渐变背景 -->
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 圆角矩形背景 -->
+  <rect width="256" height="256" rx="60" fill="url(#purpleGrad)"/>
+  
+  <!-- 工作台图标 - 简洁的清单/任务图标 -->
+  <g transform="translate(128, 128)">
+    <!-- 外框 -->
+    <rect x="-70" y="-85" width="140" height="170" rx="12" fill="none" stroke="white" stroke-width="8"/>
+    
+    <!-- 三个勾选项 -->
+    <g fill="white">
+      <!-- 第一项 - 已完成 -->
+      <circle cx="-45" cy="-50" r="8"/>
+      <path d="M -45,-50 L -42,-47 L -38,-53" stroke="url(#purpleGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <line x1="-25" y1="-50" x2="45" y2="-50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      
+      <!-- 第二项 - 进行中 -->
+      <circle cx="-45" cy="0" r="8"/>
+      <line x1="-25" y1="0" x2="45" y2="0" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      
+      <!-- 第三项 -->
+      <circle cx="-45" cy="50" r="8"/>
+      <line x1="-25" y1="50" x2="20" y2="50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
