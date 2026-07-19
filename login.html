@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 个人工作台 v3.0 多用户版</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #9b87f5;
+            --primary-light: #b8a9f7;
+            --primary-alpha-10: rgba(155, 135, 245, 0.1);
+            --bg-primary: #faf5ff;
+            --bg-secondary: #ffffff;
+            --text-primary: #171717;
+            --text-secondary: #737373;
+            --text-tertiary: #a3a3a3;
+            --border: #e5e5e5;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #faf5ff 0%, #e9d5ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .logo p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .user-meta {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(155, 135, 245, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--primary-alpha-10);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        .add-user-form {
+            display: none;
+        }
+
+        .add-user-form.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-alpha-10);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">🚀</div>
+            <h1>个人工作台</h1>
+            <p>v3.0 多用户本地版</p>
+        </div>
+
+        <!-- 用户列表 -->
+        <div class="card">
+            <h2 class="card-title">选择用户登录</h2>
+            
+            <div class="user-list" id="userList">
+                <!-- 动态生成用户卡片 -->
+            </div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">👋</div>
+                <p>还没有用户，点击下方创建第一个用户</p>
+            </div>
+
+            <div class="divider">
+                <span>或</span>
+            </div>
+
+            <button class="btn btn-secondary" onclick="toggleAddUserForm()" id="toggleBtn" style="width: 100%;">
+                + 创建新用户
+            </button>
+
+            <!-- 添加用户表单 -->
+            <div class="add-user-form" id="addUserForm">
+                <form onsubmit="createUser(event)">
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="newUsername"
+                            placeholder="请输入用户名（如：张三）"
+                            required
+                            minlength="2"
+                            maxlength="20"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">通义千问 API Key（可选）</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="newApiKey"
+                            placeholder="sk-... (可稍后在设置中添加)"
+                        >
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="toggleAddUserForm()">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            创建用户
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>数据存储在浏览器本地 · 安全私密</p>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // 用户管理系统
+        // ========================================
+        
+        const STORAGE_KEY = 'workspace_users';
+        const CURRENT_USER_KEY = 'workspace_current_user';
+
+        // 用户数据结构
+        class UserManager {
+            constructor() {
+                this.users = this.loadUsers();
+            }
+
+            // 加载用户列表
+            loadUsers() {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            }
+
+            // 保存用户列表
+            saveUsers() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(this.users));
+            }
+
+            // 创建新用户
+            createUser(username, apiKey = '') {
+                // 检查用户名是否已存在
+                if (this.users.find(u => u.username === username)) {
+                    throw new Error('用户名已存在');
+                }
+
+                const user = {
+                    id: 'user_' + Date.now(),
+                    username: username,
+                    apiKey: apiKey,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    avatar: this.getRandomAvatar()
+                };
+
+                this.users.push(user);
+                this.saveUsers();
+                return user;
+            }
+
+            // 删除用户
+            deleteUser(userId) {
+                const index = this.users.findIndex(u => u.id === userId);
+                if (index > -1) {
+                    this.users.splice(index, 1);
+                    this.saveUsers();
+                    return true;
+                }
+                return false;
+            }
+
+            // 更新最后登录时间
+            updateLastLogin(userId) {
+                const user = this.users.find(u => u.id === userId);
+                if (user) {
+                    user.lastLogin = new Date().toISOString();
+                    this.saveUsers();
+                }
+            }
+
+            // 获取随机头像emoji
+            getRandomAvatar() {
+                const avatars = ['👨', '👩', '🧑', '👦', '👧', '🧔', '👨‍💼', '👩‍💼', '🧑‍💻', '👨‍🎨', '👩‍🎨'];
+                return avatars[Math.floor(Math.random() * avatars.length)];
+            }
+
+            // 格式化时间
+            formatTime(isoString) {
+                const date = new Date(isoString);
+                const now = new Date();
+                const diff = now - date;
+                
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
+
+                if (minutes < 1) return '刚刚';
+                if (minutes < 60) return `${minutes}分钟前`;
+                if (hours < 24) return `${hours}小时前`;
+                if (days < 7) return `${days}天前`;
+                return date.toLocaleDateString('zh-CN');
+            }
+        }
+
+        const userManager = new UserManager();
+
+        // ========================================
+        // UI 渲染
+        // ========================================
+
+        function renderUserList() {
+            const userListEl = document.getElementById('userList');
+            const emptyStateEl = document.getElementById('emptyState');
+
+            if (userManager.users.length === 0) {
+                userListEl.innerHTML = '';
+                emptyStateEl.style.display = 'block';
+                return;
+            }
+
+            emptyStateEl.style.display = 'none';
+            
+            // 按最后登录时间排序
+            const sortedUsers = [...userManager.users].sort((a, b) => 
+                new Date(b.lastLogin) - new Date(a.lastLogin)
+            );
+
+            userListEl.innerHTML = sortedUsers.map(user => `
+                <div class="user-card" onclick="loginUser('${user.id}')">
+                    <div class="user-info">
+                        <div class="user-avatar">${user.avatar}</div>
+                        <div class="user-details">
+                            <div class="user-name">${user.username}</div>
+                            <div class="user-meta">最后登录: ${userManager.formatTime(user.lastLogin)}</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="loginUser('${user.id}'); event.stopPropagation();">
+                        登录
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ========================================
+        // 交互功能
+        // ========================================
+
+        function toggleAddUserForm() {
+            const form = document.getElementById('addUserForm');
+            const btn = document.getElementById('toggleBtn');
+            
+            if (form.classList.contains('active')) {
+                form.classList.remove('active');
+                btn.textContent = '+ 创建新用户';
+            } else {
+                form.classList.add('active');
+                btn.textContent = '收起表单';
+                setTimeout(() => {
+                    document.getElementById('newUsername').focus();
+                }, 100);
+            }
+        }
+
+        function createUser(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('newUsername').value.trim();
+            const apiKey = document.getElementById('newApiKey').value.trim();
+
+            try {
+                const user = userManager.createUser(username, apiKey);
+                
+                showToast('✅ 用户创建成功！', 'success');
+                
+                // 清空表单
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newApiKey').value = '';
+                toggleAddUserForm();
+                
+                // 重新渲染列表
+                renderUserList();
+                
+                // 自动登录
+                setTimeout(() => {
+                    loginUser(user.id);
+                }, 500);
+                
+            } catch (error) {
+                showToast('❌ ' + error.message, 'error');
+            }
+        }
+
+        function loginUser(userId) {
+            // 更新最后登录时间
+            userManager.updateLastLogin(userId);
+            
+            // 保存当前用户
+            localStorage.setItem(CURRENT_USER_KEY, userId);
+            
+            // 跳转到工作台
+            window.location.href = 'index-complete.html';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s reverse';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // 初始化
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUserList();
+            
+            // 回车键提交表单
+            document.getElementById('newUsername').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    document.querySelector('#addUserForm form').requestSubmit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
