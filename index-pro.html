@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人工作台 Pro - 专业版</title>
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           设计系统：CSS 变量
+        ======================================== */
+        :root {
+            /* 淡雅紫配色系统 */
+            --primary: #9b87f5;
+            --primary-light: #b8a9f7;
+            --primary-dark: #7c68d4;
+            --primary-alpha-10: rgba(155, 135, 245, 0.1);
+            --primary-alpha-20: rgba(155, 135, 245, 0.2);
+            
+            /* 功能色彩 */
+            --color-work: #dc2626;
+            --color-fitness: #ea580c;
+            --color-media: #9b87f5;
+            --color-thought: #0891b2;
+            --color-pomodoro: #16a34a;
+            --color-stats: #2563eb;
+            --color-expression: #db2777;
+            
+            /* 中性色（淡雅紫背景） */
+            --bg-primary: #faf5ff;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f0ff;
+            --bg-hover: #e9d5ff;
+            --text-primary: #171717;
+            --text-secondary: #737373;
+            --text-tertiary: #a3a3a3;
+            --text-disabled: #d4d4d4;
+            --border-light: #f5f5f5;
+            --border: #e5e5e5;
+            --border-medium: #d4d4d4;
+            
+            /* 阴影系统（3级） */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            
+            /* 间距系统（8px倍数） */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            
+            /* 圆角系统 */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+            
+            /* 动画曲线 */
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            /* 过渡时长 */
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --duration-slow: 350ms;
+        }
+
+        /* 深色模式 */
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #171717;
+            --bg-tertiary: #262626;
+            --bg-hover: #3b1f5c;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --text-disabled: #525252;
+            --border-light: #262626;
+            --border: #404040;
+            --border-medium: #525252;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ========================================
+           基础样式
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration-normal) var(--ease-out),
+                        color var(--duration-normal) var(--ease-out);
+        }
+
+        /* ========================================
+           布局结构
+        ======================================== */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ========================================
+           左侧导航栏
+        ======================================== */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: all var(--duration-normal) var(--ease-out);
+        }
+
+        .sidebar-header {
+            padding: var(--space-6) var(--space-5);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .sidebar-header .version {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--primary-alpha-10);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-header .subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        /* 导航菜单 */
+        .nav-menu {
+            flex: 1;
+            padding: var(--space-3);
+            overflow-y: auto;
+        }
+
+        .nav-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .nav-menu::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: var(--radius-full);
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: var(--space-2) var(--space-4);
+            margin-top: var(--space-4);
+            margin-bottom: var(--space-2);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            margin-bottom: 2px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-out);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--primary);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            transition: height var(--duration-normal) var(--ease-spring);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            transform: translateX(2px);
+        }
+
+        .nav-item.active {
+            background: var(--bg-hover);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-item.active::before {
+            height: 20px;
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+            animation: scaleIn var(--duration-normal) var(--ease-spring);
+        }
+
+        /* 侧边栏底部 */
+        .sidebar-footer {
+            padding: var(--space-4);
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--duration-fast) var(--ease-out);
+            width: 100%;
+            margin-bottom: var(--space-2);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ai-trigger {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all var(--duration-normal) var(--ease-out);
+            width: 100%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ai-trigger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .ai-trigger:active {
+            transform: translateY(0);
+        }
+
+        .ai-trigger svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ========================================
+           主内容区
+        ======================================== */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-8);
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: var(--radius-full);
+        }
+
+        /* 顶部时间区 */
+        .time-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: var(--space-12) var(--space-10);
+            border-radius: var(--radius-xl);
+            color: white;
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .time-header .time {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+            letter-spacing: -2px;
+            position: relative;
+        }
+
+        .time-header .date {
+            font-size: 18px;
+            opacity: 0.9;
+            font-weight: 500;
+            position: relative;
+        }
+
+        /* 内容区域切换 */
+        .content-section {
+            display: none;
+            animation: fadeInUp var(--duration-slow) var(--ease-out);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================================
+           卡片系统
+        ======================================== */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-5);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all var(--duration-normal) var(--ease-out);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-medium);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-5);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-primary);
+        }
+
+        .card-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        /* ========================================
+           任务列表
+        ======================================== */
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+            border-left: 3px solid var(--color-work);
+            transition: all var(--duration-normal) var(--ease-out);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .task-item:hover {
+            background: var(--bg-hover);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        /* 自定义复选框 */
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-work);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: relative;
+            transition: all var(--duration-fast) var(--ease-out);
+            background: var(--bg-secondary);
+        }
+
+        .task-checkbox:hover {
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .task-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .task-checkbox.checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            animation: checkmark var(--duration-normal) var(--ease-spring);
+        }
+
+        @keyframes checkmark {
+            0% {
+                height: 0;
+            }
+            100% {
+                height: 8px;
+            }
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .task-desc {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-2);
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: var(--space-2);
+            opacity: 0;
+            transition: opacity var(--duration-fast) var(--ease-out);
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-action-btn {
+            padding: var(--space-1) var(--space-2);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-out);
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .task-action-btn:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .task-action-btn.delete:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* 优先级徽章 */
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-low {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        /* ========================================
+           表单元素
+        ======================================== */
+        .input-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all var(--duration-fast) var(--ease-out);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-alpha-10);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           按钮系统
+        ======================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-out);
+            font-family: inherit;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* ========================================
+           Toast 通知系统
+        ======================================== */
+        .toast-container {
+            position: fixed;
+            top: var(--space-6);
+            right: var(--space-6);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4) var(--space-5);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 300px;
+            max-width: 400px;
+            pointer-events: all;
+            animation: slideInRight var(--duration-normal) var(--ease-out);
+        }
+
+        .toast.removing {
+            animation: slideOutRight var(--duration-normal) var(--ease-out);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .toast svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toast.success {
+            border-left: 3px solid #16a34a;
+        }
+
+        .toast.success svg {
+            color: #16a34a;
+        }
+
+        .toast.error {
+            border-left: 3px solid #dc2626;
+        }
+
+        .toast.error svg {
+            color: #dc2626;
+        }
+
+        .toast.info {
+            border-left: 3px solid var(--primary);
+        }
+
+        .toast.info svg {
+            color: var(--primary);
+        }
+
+        /* ========================================
+           空状态
+        ======================================== */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-16) var(--space-6);
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--space-4);
+            opacity: 0.3;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state p {
+            font-size: 15px;
+            margin-bottom: var(--space-2);
+            font-weight: 500;
+        }
+
+        .empty-state small {
+            font-size: 13px;
+            color: var(--text-disabled);
+        }
+
+        /* ========================================
+           加载动画
+        ======================================== */
+        .loading-skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-tertiary) 25%,
+                var(--bg-hover) 50%,
+                var(--bg-tertiary) 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+            border-radius: var(--radius-md);
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: var(--space-2);
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin-bottom: var(--space-3);
+        }
+
+        /* ========================================
+           响应式
+        ======================================== */
+        @media (max-width: 1366px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-left: 240px;
+                padding: var(--space-6);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: var(--space-4);
+            }
+        }
+
+        /* ========================================
+           工具动画
+        ======================================== */
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* ========================================
+           快捷键提示
+        ======================================== */
+        .keyboard-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            background: var(--bg-tertiary);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast 容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>
+                    个人工作台
+                    <span class="version">PRO</span>
+                </h1>
+                <p class="subtitle">让每一天都更高效</p>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section-title">工作空间</div>
+                
+                <div class="nav-item active" data-section="work">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <span>工作计划</span>
+                    <span class="badge" id="workBadge">0</span>
+                </div>
+                
+                <div class="nav-item" data-section="fitness">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span>减脂塑形</span>
+                </div>
+                
+                <div class="nav-item" data-section="media">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    <span>自媒体运营</span>
+                </div>
+                
+                <div class="nav-item" data-section="thought">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    <span>今日感悟</span>
+                </div>
+                
+                <div class="nav-section-title">生产力工具</div>
+                
+                <div class="nav-item" data-section="pomodoro">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>番茄钟</span>
+                </div>
+                
+                <div class="nav-item" data-section="stats">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span>数据统计</span>
+                </div>
+                
+                <div class="nav-item" data-section="expression">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <span>表达训练</span>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" id="themeIcon">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                    <span id="themeText">深色模式</span>
+                </button>
+                
+                <button class="ai-trigger">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <span>AI 助手</span>
+                    <span class="keyboard-hint">⌘K</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 时间区域 -->
+            <div class="time-header">
+                <div class="time" id="currentTime">00:00:00</div>
+                <div class="date" id="currentDate">加载中...</div>
+            </div>
+
+            <!-- 工作计划区 -->
+            <section class="content-section active" id="work-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            添加新任务
+                        </h2>
+                        <span class="keyboard-hint">Ctrl+N</span>
+                    </div>
+                    
+                    <form id="taskForm">
+                        <div class="input-group">
+                            <label>任务标题 *</label>
+                            <input type="text" id="taskTitle" placeholder="今天要完成什么？" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>详细描述</label>
+                            <textarea id="taskDesc" placeholder="添加更多详细信息..."></textarea>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>优先级</label>
+                            <select id="taskPriority">
+                                <option value="high">🔴 高优先级</option>
+                                <option value="medium" selected>🟡 中优先级</option>
+                                <option value="low">🔵 低优先级</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <button type="submit" class="btn btn-primary">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                添加任务
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                                清空
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                            </svg>
+                            今日任务
+                        </h2>
+                        <button class="btn btn-ghost" onclick="clearCompleted()">
+                            清除已完成
+                        </button>
+                    </div>
+                    
+                    <div id="taskList">
+                        <!-- 任务将在这里动态添加 -->
+                    </div>
+                    
+                    <div id="emptyState" class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p>还没有任务</p>
+                        <small>添加第一个任务开始高效的一天吧！</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 其他功能区占位 -->
+            <section class="content-section" id="fitness-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <p>减脂塑形管理</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="media-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        <p>自媒体运营</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="thought-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        <p>今日感悟与进步</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="pomodoro-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p>番茄钟计时器</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="stats-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <p>数据统计看板</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="expression-section">
+                <div class="card">
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <p>表达训练模块</p>
+                        <small>功能开发中，敬请期待...</small>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // ========================================
+        // 应用状态管理
+        // ========================================
+        const AppState = {
+            tasks: [],
+            currentTheme: 'light',
+            editingTaskId: null,
+            
+            // 从 LocalStorage 加载数据
+            load() {
+                const saved = localStorage.getItem('workbench_tasks');
+                if (saved) {
+                    this.tasks = JSON.parse(saved);
+                }
+                const theme = localStorage.getItem('workbench_theme');
+                if (theme) {
+                    this.currentTheme = theme;
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+            },
+            
+            // 保存到 LocalStorage
+            save() {
+                localStorage.setItem('workbench_tasks', JSON.stringify(this.tasks));
+                localStorage.setItem('workbench_theme', this.currentTheme);
+            },
+            
+            // 添加任务
+            addTask(task) {
+                task.id = Date.now();
+                task.completed = false;
+                task.createdAt = new Date().toISOString();
+                this.tasks.unshift(task);
+                this.save();
+                renderTasks();
+                updateBadge();
+                showToast('success', '任务已添加', task.title);
+            },
+            
+            // 切换任务完成状态
+            toggleTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.save();
+                    renderTasks();
+                    updateBadge();
+                    
+                    if (task.completed) {
+                        showToast('success', '任务已完成', '干得漂亮！');
+                    }
+                }
+            },
+            
+            // 删除任务
+            deleteTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                this.tasks = this.tasks.filter(t => t.id !== id);
+                this.save();
+                renderTasks();
+                updateBadge();
+                showToast('info', '任务已删除', task?.title || '');
+            },
+            
+            // 编辑任务
+            editTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    document.getElementById('taskTitle').value = task.title;
+                    document.getElementById('taskDesc').value = task.description || '';
+                    document.getElementById('taskPriority').value = task.priority;
+                    this.editingTaskId = id;
+                    
+                    // 滚动到表单
+                    document.querySelector('#work-section .card').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('taskTitle').focus();
+                }
+            },
+            
+            // 更新任务
+            updateTask(id, updates) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    Object.assign(task, updates);
+                    this.save();
+                    renderTasks();
+                    showToast('success', '任务已更新', task.title);
+                }
+                this.editingTaskId = null;
+            },
+            
+            // 清除已完成任务
+            clearCompleted() {
+                const count = this.tasks.filter(t => t.completed).length;
+                this.tasks = this.tasks.filter(t => !t.completed);
+                this.save();
+                renderTasks();
+                updateBadge();
+                showToast('info', '已清除', `${count} 个已完成任务`);
+            }
+        };
+
+        // ========================================
+        // Toast 通知系统
+        // ========================================
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+            };
+            
+            toast.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    ${icons[type]}
+                </svg>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // 任务渲染
+        // ========================================
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (AppState.tasks.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            const priorityOrder = { high: 1, medium: 2, low: 3 };
+            const sortedTasks = [...AppState.tasks].sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+            });
+            
+            container.innerHTML = sortedTasks.map(task => `
+                <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                    <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="AppState.toggleTask(${task.id})"></div>
+                    <div class="task-content">
+                        <div class="task-title">${task.title}</div>
+                        ${task.description ? `<div class="task-desc">${task.description}</div>` : ''}
+                        <div class="task-meta">
+                            <span class="priority-badge priority-${task.priority}">
+                                ${task.priority === 'high' ? '高' : task.priority === 'medium' ? '中' : '低'}优先级
+                            </span>
+                            <span>${new Date(task.createdAt).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="task-action-btn" onclick="AppState.editTask(${task.id})">编辑</button>
+                        <button class="task-action-btn delete" onclick="AppState.deleteTask(${task.id})">删除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========================================
+        // 徽章更新
+        // ========================================
+        function updateBadge() {
+            const count = AppState.tasks.filter(t => !t.completed).length;
+            const badge = document.getElementById('workBadge');
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'block' : 'none';
+        }
+
+        // ========================================
+        // 表单处理
+        // ========================================
+        document.getElementById('taskForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDesc').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (!title) {
+                showToast('error', '错误', '请输入任务标题');
+                return;
+            }
+            
+            if (AppState.editingTaskId) {
+                // 更新现有任务
+                AppState.updateTask(AppState.editingTaskId, { title, description, priority });
+            } else {
+                // 添加新任务
+                AppState.addTask({ title, description, priority });
+            }
+            
+            clearForm();
+        });
+
+        function clearForm() {
+            document.getElementById('taskForm').reset();
+            AppState.editingTaskId = null;
+        }
+
+        function clearCompleted() {
+            if (AppState.tasks.filter(t => t.completed).length === 0) {
+                showToast('info', '提示', '没有已完成的任务');
+                return;
+            }
+            AppState.clearCompleted();
+        }
+
+        // ========================================
+        // 主题切换
+        // ========================================
+        function toggleTheme() {
+            AppState.currentTheme = AppState.currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', AppState.currentTheme);
+            AppState.save();
+            
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            
+            if (AppState.currentTheme === 'dark') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+                text.textContent = '浅色模式';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+                text.textContent = '深色模式';
+            }
+            
+            showToast('info', '主题已切换', AppState.currentTheme === 'dark' ? '深色模式' : '浅色模式');
+        }
+
+        // ========================================
+        // 时间更新
+        // ========================================
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const date = now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            document.getElementById('currentTime').textContent = time;
+            document.getElementById('currentDate').textContent = date;
+        }
+
+        // ========================================
+        // 导航切换
+        // ========================================
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                
+                this.classList.add('active');
+                const section = this.getAttribute('data-section');
+                document.getElementById(section + '-section').classList.add('active');
+            });
+        });
+
+        // ========================================
+        // 快捷键
+        // ========================================
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + N: 新建任务
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                document.getElementById('taskTitle').focus();
+            }
+            
+            // Ctrl/Cmd + K: AI助手
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                showToast('info', 'AI 助手', '功能开发中...');
+            }
+        });
+
+        // ========================================
+        // 初始化
+        // ========================================
+        AppState.load();
+        renderTasks();
+        updateBadge();
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 欢迎提示
+        setTimeout(() => {
+            if (AppState.tasks.length === 0) {
+                showToast('info', '欢迎使用', '开始添加你的第一个任务吧！');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

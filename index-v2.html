@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
+    <title>个人工作台 v2.1 美化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 主色系 */
+            --primary-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            
+            /* 背景色 */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #f8fafc;
+            
+            /* 文字颜色 */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            
+            /* 边框 */
+            --border-color: #e2e8f0;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            
+            /* 间距 */
+            --space-xs: 8px;
+            --space-sm: 12px;
+            --space-md: 20px;
+            --space-lg: 30px;
+            
+            /* 圆角 */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ========== 头部时间 ========== */
+        .header {
+            background: var(--bg-secondary);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .current-time {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .current-date {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* ========== Tab 导航 ========== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 15px 20px;
+            border: none;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tab-btn:hover {
+            background: #e0e7ff;
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-icon {
+            font-size: 24px;
+        }
+
+        .tab-count {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* ========== Tab 内容 ========== */
+        .tab-content {
+            display: none;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            min-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 打卡卡片（重新设计）========== */
+        .checkin-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e8f3ff 100%);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checkin-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .checkin-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .checkin-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .checkin-stat-item {
+            text-align: center;
+            padding: 16px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checkin-stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .checkin-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .checkin-week-progress {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .checkin-day-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .checkin-day-dot.checked {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        /* ========== 成长曲线（重新设计）========== */
+        .growth-card {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .growth-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .growth-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .growth-period {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .growth-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .growth-metric {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .growth-metric:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .growth-metric-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .growth-metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .growth-metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .growth-metric-value.up {
+            color: var(--success-color);
+        }
+
+        .growth-metric-value.down {
+            color: var(--danger-color);
+        }
+
+        .growth-metric-value.neutral {
+            color: var(--text-tertiary);
+        }
+
+        .growth-metric-change {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .growth-insights {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .growth-insights-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #78350f;
+            margin-bottom: 8px;
+        }
+
+        .growth-insights-list {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.8;
+        }
+
+        /* ========== 按钮样式（重新设计）========== */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* ========== 操作按钮区域 ========== */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .action-buttons .btn-main {
+            flex: 2;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-buttons .btn-main:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .action-buttons .btn-secondary {
+            flex: 1;
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-buttons .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--primary-color);
+        }
+
+        /* ========== 输入框优化 ========== */
+        .quick-input {
+            margin-bottom: 30px;
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .quick-input h3 {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ========== AI 提示 ========== */
+        .ai-hint {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--primary-color);
+            font-size: 13px;
+            color: #1e40af;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* ========== Toast 提示 ========== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--success-color);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            max-width: 400px;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ========== 彩带动画（仅里程碑）========== */
+        @keyframes confetti {
+            0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            top: -10px;
+            z-index: 999;
+            animation: confetti 3s linear forwards;
+        }
+
+        /* ========== 响应式设计 ========== */
+        @media (max-width: 768px) {
+            .checkin-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .growth-metrics {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn-main,
+            .action-buttons .btn-secondary {
+                flex: 1;
+                width: 100%;
+            }
+
+            .current-time {
+                font-size: 36px;
+            }
+
+            .tab-btn {
+                min-width: 120px;
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* ========== 其他原有样式（工作计划、健身等）========== */
+        .work-section {
+            margin-bottom: 25px;
+        }
+
+        .work-section h4 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .work-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary-color);
+            transition: all 0.2s ease;
+        }
+
+        .work-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .work-item-content {
+            flex: 1;
+        }
+
+        .work-item-time {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .fitness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .fitness-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .fitness-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .fitness-card-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .fitness-card-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .fitness-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .record-list {
+            margin-top: 20px;
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .record-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .record-info {
+            flex: 1;
+        }
+
+        .record-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .record-details {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .pomodoro-timer {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .timer-display {
+            font-size: 80px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .timer-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #2563eb);
+            color: white;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card-title {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-value {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-trend {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部时间 -->
+        <div class="header">
+            <div class="current-time" id="currentTime">12:00:00</div>
+            <div class="current-date" id="currentDate">2026年7月29日 星期二</div>
+        </div>
+
+        <!-- Tab 导航 -->
+        <div class="tabs">
+            <button class="tab-btn" onclick="switchTab('work')" id="tab-work">
+                <span class="tab-icon">📋</span>
+                <span>工作计划</span>
+                <span class="tab-count" id="workCount">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('fitness')" id="tab-fitness">
+                <span class="tab-icon">💪</span>
+                <span>减脂塑形</span>
+                <span class="tab-count" id="fitnessCount">0</span>
+            </button>
+            <button class="tab-btn active" onclick="switchTab('media')" id="tab-media">
+                <span class="tab-icon">📱</span>
+                <span>自媒体运营</span>
+                <span class="tab-count" id="mediaCount">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('reflection')" id="tab-reflection">
+                <span class="tab-icon">💭</span>
+                <span>今日感悟</span>
+                <span class="tab-count" id="reflectionCount">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('pomodoro')" id="tab-pomodoro">
+                <span class="tab-icon">⏰</span>
+                <span>番茄钟</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('stats')" id="tab-stats">
+                <span class="tab-icon">📊</span>
+                <span>数据统计</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('expression')" id="tab-expression">
+                <span class="tab-icon">📖</span>
+                <span>表达训练</span>
+            </button>
+        </div>
+
+        <!-- Tab 内容：自媒体运营（重点优化）-->
+        <div id="content-media" class="tab-content active">
+            <!-- 打卡卡片（新设计）-->
+            <div class="checkin-card">
+                <div class="checkin-header">
+                    <h3>📅 每日打卡</h3>
+                </div>
+                <div class="checkin-stats">
+                    <div class="checkin-stat-item">
+                        <div class="checkin-stat-label">连续打卡</div>
+                        <div class="checkin-stat-value" id="continuousDays">
+                            <span>🔥</span>
+                            <span>0</span>
+                            <span style="font-size: 16px; font-weight: 500;">天</span>
+                        </div>
+                    </div>
+                    <div class="checkin-stat-item">
+                        <div class="checkin-stat-label">本周进度</div>
+                        <div class="checkin-week-progress" id="weekProgress">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    <div class="checkin-stat-item">
+                        <div class="checkin-stat-label">累计打卡</div>
+                        <div class="checkin-stat-value" id="totalDays">
+                            <span>📊</span>
+                            <span>0</span>
+                            <span style="font-size: 16px; font-weight: 500;">天</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成长曲线（新设计）-->
+            <div class="growth-card">
+                <div class="growth-header">
+                    <h3>📈 成长曲线</h3>
+                    <div class="growth-period">本周 vs 上周</div>
+                </div>
+                <div class="growth-metrics" id="growthMetrics">
+                    <!-- 动态生成 -->
+                </div>
+                <div class="growth-insights" id="growthInsights" style="display: none;">
+                    <div class="growth-insights-title">💡 智能洞察</div>
+                    <div class="growth-insights-list" id="insightsList">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速输入区域 -->
+            <div class="quick-input">
+                <h3>📝 发布记录</h3>
+                <div class="ai-hint">
+                    💡 记录每次发布的内容和数据，AI 会帮你分析趋势和给出建议
+                </div>
+
+                <div class="input-group">
+                    <select id="mediaPlatform">
+                        <option value="xiaohongshu">📕 小红书</option>
+                        <option value="douyin">📹 抖音</option>
+                        <option value="bilibili">📺 B站</option>
+                        <option value="weixin">💬 公众号</option>
+                        <option value="weibo">🔶 微博</option>
+                        <option value="zhihu">💡 知乎</option>
+                    </select>
+                    <select id="mediaContentType">
+                        <option value="life">🌈 生活记录</option>
+                        <option value="knowledge">📚 知识分享</option>
+                        <option value="product">🛍️ 好物推荐</option>
+                        <option value="tutorial">🎓 教程攻略</option>
+                        <option value="vlog">🎬 Vlog</option>
+                        <option value="other">🔖 其他</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="mediaTitle" placeholder="📝 标题（必填）">
+                </div>
+
+                <div class="input-group">
+                    <textarea id="mediaContent" placeholder="✍️ 内容描述（选填）"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <input type="datetime-local" id="mediaPublishTime">
+                </div>
+
+                <div class="input-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <input type="number" id="mediaViews" placeholder="👁️ 阅读量" min="0">
+                    <input type="number" id="mediaLikes" placeholder="👍 点赞数" min="0">
+                    <input type="number" id="mediaCollects" placeholder="⭐ 收藏数" min="0">
+                    <input type="number" id="mediaComments" placeholder="💬 评论数" min="0">
+                    <input type="number" id="mediaShares" placeholder="🔄 分享数" min="0">
+                    <input type="number" id="mediaFollows" placeholder="➕ 涨粉数" min="0">
+                </div>
+
+                <!-- 操作按钮（新布局）-->
+                <div class="action-buttons">
+                    <button class="btn btn-lg btn-main" onclick="saveAndCheckin()">
+                        ✨ 保存并打卡
+                    </button>
+                    <button class="btn btn-secondary" onclick="saveMediaRecord()">
+                        💾 仅保存
+                    </button>
+                    <button class="btn btn-secondary" onclick="analyzeWithAI()">
+                        🤖 AI 分析
+                    </button>
+                    <button class="btn btn-icon" onclick="showAPIKeySettings()" title="API 设置">
+                        ⚙️
+                    </button>
+                </div>
+            </div>
+
+            <!-- 历史记录 -->
+            <div class="record-list">
+                <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">📋 发布历史</h4>
+                <div id="mediaList"></div>
+            </div>
+        </div>
+
+        <!-- 其他 Tab 内容（保持原有）-->
+        <div id="content-work" class="tab-content">
+            <!-- 工作计划内容 -->
+        </div>
+
+        <div id="content-fitness" class="tab-content">
+            <!-- 减脂塑形内容 -->
+        </div>
+
+        <div id="content-reflection" class="tab-content">
+            <!-- 今日感悟内容 -->
+        </div>
+
+        <div id="content-pomodoro" class="tab-content">
+            <!-- 番茄钟内容 -->
+        </div>
+
+        <div id="content-stats" class="tab-content">
+            <!-- 数据统计内容 -->
+        </div>
+
+        <div id="content-expression" class="tab-content">
+            <!-- 表达训练内容 -->
+        </div>
+    </div>
+
+    <script src="story-api.js"></script>
+    <script src="qianwen-api.js"></script>
+    <script src="ai-classifier.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
