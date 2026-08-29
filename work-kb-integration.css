@@ -1,0 +1,307 @@
+/**
+ * 工作计划知识库关联 - 样式文件
+ * 版本：v2.2
+ */
+
+/* ==================== 关联资料容器 ==================== */
+.related-docs {
+    margin-top: 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        margin-top: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        margin-top: 12px;
+    }
+}
+
+.related-docs.highlight {
+    animation: highlightPulse 1s ease-in-out 2;
+    border-left-color: #10b981;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+}
+
+/* ==================== 关联资料头部 ==================== */
+.related-docs-header {
+    padding: 12px 16px;
+    background: rgba(59, 130, 246, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    cursor: pointer;
+    user-select: none;
+}
+
+.related-docs-icon {
+    font-size: 18px;
+}
+
+.related-docs-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.related-docs-toggle {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.related-docs-toggle:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.related-docs.collapsed .related-docs-toggle {
+    transform: rotate(-90deg);
+}
+
+.related-docs.collapsed .related-docs-list,
+.related-docs.collapsed .related-docs-footer {
+    display: none;
+}
+
+/* ==================== 文档列表 ==================== */
+.related-docs-list {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ==================== 文档项 ==================== */
+.doc-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.doc-item:hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.doc-item:active {
+    transform: translateX(2px);
+}
+
+.doc-item-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.doc-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.doc-item-summary {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.doc-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.doc-item-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.doc-item-score::before {
+    content: '📊';
+    font-size: 11px;
+}
+
+.doc-item-path {
+    color: #94a3b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==================== 关联资料底部 ==================== */
+.related-docs-footer {
+    padding: 12px 16px;
+    background: rgba(59, 130, 246, 0.03);
+    border-top: 1px solid rgba(59, 130, 246, 0.1);
+    display: flex;
+    justify-content: center;
+}
+
+.related-docs-ai-btn {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.related-docs-ai-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+.related-docs-ai-btn:active {
+    transform: translateY(0);
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 768px) {
+    .related-docs {
+        border-radius: 8px;
+    }
+
+    .related-docs-header {
+        padding: 10px 12px;
+    }
+
+    .related-docs-list {
+        padding: 8px;
+        gap: 6px;
+    }
+
+    .doc-item {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .doc-item-icon {
+        font-size: 20px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .doc-item-title {
+        font-size: 13px;
+    }
+
+    .doc-item-summary {
+        font-size: 12px;
+    }
+
+    .doc-item-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .related-docs-footer {
+        padding: 10px 12px;
+    }
+
+    .related-docs-ai-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==================== 加载动画 ==================== */
+.related-docs-loading {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.related-docs-loading::before {
+    content: '🔍';
+    display: block;
+    font-size: 32px;
+    margin-bottom: 8px;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ==================== 空状态 ==================== */
+.related-docs-empty {
+    padding: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.related-docs-empty::before {
+    content: '📭';
+    display: block;
+    font-size: 32px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
