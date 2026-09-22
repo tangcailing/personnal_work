@@ -1,0 +1,293 @@
+================================================================================
+🍅 番茄钟增强模块 - 完整升级包
+================================================================================
+
+📋 使用说明：
+1. 打开 index-complete.html 文件
+2. 按照下面的指示，在对应位置插入代码
+3. 保存并在浏览器中测试
+
+================================================================================
+✅ 第一部分：CSS 样式增强
+================================================================================
+位置：在原有的 .pomodoro-status 样式后面（约第960行），插入以下CSS：
+
+/* ======================================== 
+   番茄钟增强样式 - 新增部分
+======================================== */
+
+/* 番茄钟模式选择器 */
+.pomodoro-mode-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.pomodoro-mode-btn {
+    background: var(--bg-secondary);
+    border: 2px solid rgba(155, 135, 245, 0.15);
+    border-radius: var(--radius-lg);
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out);
+    text-align: center;
+}
+
+.pomodoro-mode-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-alpha-10);
+    transform: translateY(-2px);
+}
+
+.pomodoro-mode-btn.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.mode-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.mode-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.mode-time {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.pomodoro-mode-btn.active .mode-name,
+.pomodoro-mode-btn.active .mode-time {
+    color: white;
+}
+
+/* 番茄钟进度环 */
+.pomodoro-progress-ring {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 32px auto;
+}
+
+.pomodoro-display-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -2px;
+    pointer-events: none;
+}
+
+/* 环境音选择器 */
+.ambient-sound-selector {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+}
+
+.ambient-btn {
+    background: var(--bg-secondary);
+    border: 1px solid rgba(155, 135, 245, 0.2);
+    border-radius: var(--radius-md);
+    padding: 12px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.ambient-btn:hover {
+    background: var(--primary-alpha-10);
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.ambient-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.ambient-btn span {
+    font-size: 24px;
+}
+
+.ambient-btn small {
+    font-size: 11px;
+}
+
+/* 番茄钟统计卡片优化 */
+#pomodoroStats .stats-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+#pomodoroStats .stat-mini-card {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(155, 135, 245, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(155, 135, 245, 0.1);
+}
+
+#pomodoroStats .stat-mini-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+#pomodoroStats .stat-mini-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+================================================================================
+✅ 第二部分：HTML 结构替换
+================================================================================
+位置：找到 <!-- 4. 番茄钟模块 --> 那一段（约第1688-1719行）
+将整个 <div class="content-section" id="pomodoro-section"> ... </div> 部分
+替换为下面的代码：
+
+            <!-- 4. 番茄钟模块（增强版） -->
+            <div class="content-section" id="pomodoro-section">
+                <!-- 番茄钟主卡片 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            番茄钟计时器
+                        </h2>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <button class="btn btn-ghost btn-sm" onclick="togglePomodoroSound()">
+                                <span id="soundIcon">🔊</span>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="showPomodoroSettings()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 专注节奏选择 -->
+                    <div class="pomodoro-mode-selector">
+                        <button class="pomodoro-mode-btn active" data-mode="standard" onclick="selectPomodoroMode('standard')">
+                            <div class="mode-icon">🍅</div>
+                            <div class="mode-name">标准番茄</div>
+                            <div class="mode-time">25 + 5</div>
+                        </button>
+                        <button class="pomodoro-mode-btn" data-mode="deep" onclick="selectPomodoroMode('deep')">
+                            <div class="mode-icon">🎯</div>
+                            <div class="mode-name">深度工作</div>
+                            <div class="mode-time">52 + 17</div>
+                        </button>
+                        <button class="pomodoro-mode-btn" data-mode="ultra" onclick="selectPomodoroMode('ultra')">
+                            <div class="mode-icon">⚡</div>
+                            <div class="mode-name">超长专注</div>
+                            <div class="mode-time">90 + 20</div>
+                        </button>
+                        <button class="pomodoro-mode-btn" data-mode="quick" onclick="selectPomodoroMode('quick')">
+                            <div class="mode-icon">🚀</div>
+                            <div class="mode-name">快速冲刺</div>
+                            <div class="mode-time">15 + 3</div>
+                        </button>
+                    </div>
+                    
+                    <!-- 任务关联选择 -->
+                    <div class="input-group">
+                        <label>关联任务（可选）</label>
+                        <select id="pomodoroTaskSelect" onchange="linkPomodoroTask()">
+                            <option value="">独立专注</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 番茄钟显示区 -->
+                    <div class="pomodoro-timer">
+                        <div class="pomodoro-status" id="pomodoroStatus">准备开始</div>
+                        <div class="pomodoro-progress-ring">
+                            <svg width="280" height="280" style="transform: rotate(-90deg);">
+                                <circle cx="140" cy="140" r="130" fill="none" stroke="rgba(155, 135, 245, 0.1)" stroke-width="8"/>
+                                <circle id="pomodoroProgressCircle" cx="140" cy="140" r="130" fill="none" stroke="var(--primary)" stroke-width="8" stroke-dasharray="816.8" stroke-dashoffset="0" style="transition: stroke-dashoffset 0.3s ease;"/>
+                            </svg>
+                            <div class="pomodoro-display-overlay" id="pomodoroDisplay">25:00</div>
+                        </div>
+                        <div class="pomodoro-controls">
+                            <button class="pomodoro-btn" onclick="resetPomodoro()" title="重置">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            </button>
+                            <button class="pomodoro-btn large" id="pomodoroPlayBtn" onclick="togglePomodoro()" title="开始/暂停">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </button>
+                            <button class="pomodoro-btn" onclick="skipPomodoro()" title="跳过">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 白噪音选择 -->
+                    <div class="ambient-sound-selector" id="ambientSoundPanel" style="display: none;">
+                        <label style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; display: block;">环境音</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px;">
+                            <button class="ambient-btn active" data-sound="none" onclick="setAmbientSound('none')">
+                                <span>🔇</span>
+                                <small>静音</small>
+                            </button>
+                            <button class="ambient-btn" data-sound="rain" onclick="setAmbientSound('rain')">
+                                <span>🌧️</span>
+                                <small>雨声</small>
+                            </button>
+                            <button class="ambient-btn" data-sound="cafe" onclick="setAmbientSound('cafe')">
+                                <span>☕</span>
+                                <small>咖啡厅</small>
+                            </button>
+                            <button class="ambient-btn" data-sound="forest" onclick="setAmbientSound('forest')">
+                                <span>🌲</span>
+                                <small>森林</small>
+                            </button>
+                            <button class="ambient-btn" data-sound="wave" onclick="setAmbientSound('wave')">
+                                <span>🌊</span>
+                                <small>海浪</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 今日番茄统计卡片 -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <h3 class="card-title">📊 今日统计</h3>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-ghost btn-sm" onclick="showPomodoroHistory()">历史</button>
+                            <button class="btn btn-ghost btn-sm" onclick="showPomodoroAchievements()">成就</button>
+                        </div>
+                    </div>
+                    <div id="pomodoroStats"></div>
+                </div>
+                
+                <!-- 本周趋势图 -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <h3 class="card-title">📈 本周专注趋势</h3>
+                    </div>
+                    <canvas id="pomodoroTrendChart" style="max-height: 200px;"></canvas>
+                </div>
+            </div>
+
+
+================================================================================
+继续下一条消息...
+================================================================================
